@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gh.book.dao.BookMapper" >
+  <resultMap id="BaseResultMap" type="gh.book.model.Book" >
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="cover" property="cover" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="author" property="author" jdbcType="VARCHAR" />
+    <result column="date" property="date" jdbcType="VARCHAR" />
+    <result column="press" property="press" jdbcType="VARCHAR" />
+    <result column="abs" property="abs" jdbcType="VARCHAR" />
+    <result column="cid" property="cid" jdbcType="INTEGER" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    id, cover,title,author,date,press,abs,cid
+  </sql>
+  <select id="findById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from book  where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="findAllByCategory" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from book  where cid = #{cid,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll"  resultMap="BaseResultMap">
+    select * from book
+  </select>
+  <select id="customQuery" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select
+    <include refid="Base_Column_List" />
+    from book where title like #{where} or author like #{where}
+  </select>
+  <select id="getAllBorrow" resultMap="BaseResultMap">
+    select a.* from book a RIGHT JOIN mybook b ON a.id = b.id
+  </select>
+  <insert id="insert" parameterType="gh.book.model.Book" >
+    insert into book (id, cover, title, 
+      author, date, press, 
+      abs, cid)
+    values (#{id,jdbcType=INTEGER}, #{cover,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+      #{author,jdbcType=VARCHAR}, #{date,jdbcType=VARCHAR}, #{press,jdbcType=VARCHAR}, 
+      #{abs,jdbcType=VARCHAR}, #{cid,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="gh.book.model.Book" >
+    insert into book
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="cover != null" >
+        cover,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="author != null" >
+        author,
+      </if>
+      <if test="date != null" >
+        date,
+      </if>
+      <if test="press != null" >
+        press,
+      </if>
+      <if test="abs != null" >
+        abs,
+      </if>
+      <if test="cid != null" >
+        cid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="cover != null" >
+        #{cover,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null" >
+        #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="date != null" >
+        #{date,jdbcType=VARCHAR},
+      </if>
+      <if test="press != null" >
+        #{press,jdbcType=VARCHAR},
+      </if>
+      <if test="abs != null" >
+        #{abs,jdbcType=VARCHAR},
+      </if>
+      <if test="cid != null" >
+        #{cid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from book where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <update id="update" parameterType="gh.book.model.Book" >
+    update book set
+      cover = #{cover,jdbcType=VARCHAR}, title = #{title,jdbcType=VARCHAR},
+      author = #{author,jdbcType=VARCHAR}, date = #{date,jdbcType=VARCHAR}, press = #{press,jdbcType=VARCHAR},
+      abs = #{abs,jdbcType=VARCHAR}, cid = #{cid,jdbcType=INTEGER}
+      where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
